@@ -8,6 +8,7 @@ include 'modele/ModelePDO.php';
 class Controleur {
     private $vue;
     private $modele;
+    $this->modele = new ModelePDO();
     
     public function __construct() {
         $this->vue = new Vue();
