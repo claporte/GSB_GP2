@@ -10,16 +10,19 @@
     //sinon il existe déjà dans la variable de session
     if (empty($_SESSION["controle"]))
         $_SESSION["controle"] = new Controleur();
+    
   
     //on fait un code générique, si les infos sont passées en GET ou en POST
     //l'action sera identique
-    if (!empty ($_POST["action"]))
+    if (!empty ($_POST["action"])){
         $_SESSION["controle"]->doGetPost($_POST);
-    elseif (!empty ($_GET["action"]))
+    }
+    elseif (!empty ($_GET["action"])){
         $_SESSION["controle"]->doGetPost($_GET);
-    else
+    }
+    else{
         $_SESSION["controle"]->doGetPost("");
-    
+    }
     
         
     
