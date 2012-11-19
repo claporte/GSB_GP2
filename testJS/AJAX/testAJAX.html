@@ -1,0 +1,72 @@
+<html>
+<head>
+    <script>
+	var xhr = null;
+        // Fonction de creation de l'objet XMLHttpRequest qui resservira pour chaques fonctions AJAX
+        function getXhr(){
+            //on crée l"objet XMLHttpRequest (pour résumer c'est cet objet qui fait des requêtes HTTP au serveur
+            //en discutant par le langage XML)
+            //il est créé avec un constructeur différent que l'on soit sous IE (Microsoft) ou Mozilla 
+            if(window.XMLHttpRequest) 
+                xhr = new XMLHttpRequest(); 
+            else 
+                if(window.ActiveXObject){  
+                    try{
+                        xhr = new ActiveXObject("Msxml2.XMLHTTP");
+                    }
+                    catch (e){
+                        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                }
+                else { 
+                    alert("Votre navigateur ne supporte pas les objets XMLHTTPRequest, veuillez le mettre � jour"); 
+                    xhr = false; 
+                } 
+                
+            return xhr;
+        }
+ 
+        // Premiere fonction : remplacer le contenu d'un div
+        function ajaxNom(){
+            //on construit l'objet XMLHttpRequest qui permet de discuter avec le serveur
+            xhr = getXhr();
+
+            //Mode asynchrone : cela signifie que tant que le résultat de la requête ne nous est pas parvenu, le script est en pause et le navigateur bloqué. 
+            //Avec un bon débit et/ou peu de données à transmettre, on pourrait s'en contenter mais cela peut vite s'avérer génant pour l'utilisateur qui voit 
+            //son navigateur figé. Ce mode de transmission est donc à proscrire. Heureusement, il existe le mode asynchrone. Dans ce mode, après avoir envoyé 
+            //la requête via send, le script poursuit son exécution, sans bloquer le navigateur. Evidemment, dans ce mode, il faut prévoir quelque chose pour nous 
+            //prévenir quand la requÊte a abouti. C'est le rÔle de la fonction onreadystatechange (en fait, onreadystatechange est une propriété et non une fonction, 
+            //mais comme on lui affecte un pointeur vers une fonction nous pouvons nous permettre cet abus de langage). 
+            xhr.onreadystatechange = function()            {
+                if(xhr.readyState == 4 && xhr.status == 200)
+                {
+                        //une page HTML = une arborescence DOM que l'on peut utiliser en JAVASCRIPT
+                        //exemple : pour récupérer en JS la valeur de l'inmput text qui a comme id "txt", on fait document.getElementById('txt').value
+                        //là, on va ajouter à l'objet document HTML en cours qui a comme id "reponseNom" le code généré dans la page de test
+                        document.getElementById('reponseNom').innerHTML = xhr.responseText;
+                }
+            }
+            //la cible que l'on va chercher 
+            //pour faire concret, on va rajouter dans la balise div qui a comme id reponseNom le résultat du script php
+            //(en fait ce résultat correspond simplement à ce que l'on a en réponse à la requête http://localhost/page.php
+            xhr.open("POST",'page.php',true);
+            //format de l'entête de la requête http
+            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            //on passe au serveur la requête http://localhost/page.php?nom=lavaleurduchamp (on rajoute les param�tres en POST)
+            xhr.send("nom="+document.getElementById('txt').value);
+    }
+ 
+    </script>
+</head>
+
+<body>
+    <form>
+	Nom : 
+	<input type=text id="txt"><br>
+	<input type=button onClick="ajaxNom()" value="Cliquez">
+    </form>
+    <div id="reponseNom">
+        
+    </div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="Propel" defaultIdMethod="native">
+  <!--
+        CREATE TABLE `Source` (
+          `NumSource` int(11) DEFAULT NULL,
+          `ORIGREFCD` double DEFAULT NULL,
+          `CITATION` varchar(250) DEFAULT NULL
+        ) 
+    --> 
+  <table name="Source" phpName="Source">
+   <column name="numSource" type="integer" required="true" primaryKey="true" />
+   <column name="origineSource" type="double" required="true" primaryKey="true"/>
+   <column name="citationSource" type="varchar" size="255"/>
+  </table>
+  <!--CREATE TABLE `Genre` (
+        `NumGenre` varchar(4) DEFAULT NULL,
+        `ORIGGPFR` varchar(50) DEFAULT NULL,
+        `ORIGGPENG` varchar(50) DEFAULT NULL
+      ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  -->
+  <table name="Genre" phpName="Genre">
+   <column name="numGenre" type="varchar" size="4" required="true" primaryKey="true" />
+   <column name="nomAnGenre" type="varchar" size="128" required="true" />
+   <column name="nomFrGenre" type="varchar" size="128" required="true" />
+  </table>
+    <!--CREATE TABLE `Aliment` (
+    `NumAliment` double NOT NULL DEFAULT '0',
+    `ORIGFDNM` varchar(250) DEFAULT NULL,
+    `NumGenre` varchar(4) DEFAULT NULL,
+    `ENGFDNAM` varchar(150) DEFAULT NULL,
+    PRIMARY KEY (`NumAliment`),
+    FOREIGN KEY `NumGenre` (`NumGenre`)
+      ) -->
+  <table name="Aliment" phpName="Aliment">
+    <column name="numAliment" type="double" required="true" primaryKey="true"/>
+    <column name="nomFrAliment" type="varchar" size="255" required="true" />
+    <column name="nomAnAliment" type="varchar" size="24" required="true"/>
+    <column name="numGenre" type="varchar"  size="4" required="true"/>
+    <foreign-key foreignTable="Genre" phpName="Genre" refPhpName="Aliment">
+      <reference local="numGenre" foreign="numGenre"/>
+    </foreign-key>
+  </table>
+  
+  <!--  CREATE TABLE `Constituant` (
+          `NumConst` int(10) DEFAULT NULL,
+          `C_ORIGCPNMABR` varchar(80) DEFAULT NULL,
+          `C_ENGCPNAMABR` varchar(80) DEFAULT NULL
+        ) */
+  -->
+  <table name="Constituant" phpName="Constituant">
+    <column name="numConst" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+    <column name="origineFrConst" type="varchar" size="80" />
+    <column name="origineAnConst" type="varchar" size="80" />
+  </table>
+  
+ <!-- 
+        CREATE TABLE `CompNutri` (
+        `NumAliment` double NOT NULL DEFAULT '0',
+        `NumComp` double NOT NULL DEFAULT '0',
+        `SELVALtexte` varchar(255) DEFAULT NULL,
+        `VALMIN` double DEFAULT NULL,
+        `VALMAX` double DEFAULT NULL,
+        `N` double DEFAULT NULL,
+        `CCEUROFIR` varchar(1) DEFAULT NULL,
+        `NumSource` int(11) DEFAULT NULL,
+        PRIMARY KEY (`NumComp`,`NumAliment`),
+        KEY `NumSource` (`NumSource`)
+      ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  -->
+  <table name="CompNutri" phpName="CompNutri">
+    <column name="numAliment" type="double" required="true" primaryKey="true" />
+    <column name="numConst" type="integer" required="true" primaryKey="true"/>
+    <column name="valNutri" type="varchar" size="255" />
+    <column name="valMinNutri" type="double" />
+    <column name="valMaxNutri" type="double" />
+    <column name="nbEchantNutri" type="double" />
+    <column name="ccEurNutri" type="varchar" size="255" />
+    <column name="numSource" type="integer" />
+    <foreign-key foreignTable="Aliment" phpName="Aliment" refPhpName="CompNutri">
+      <reference local="numAliment" foreign="numAliment"/>
+    </foreign-key>
+    <foreign-key foreignTable="Constituant" phpName="Constituant" refPhpName="CompNutri">
+      <reference local="numConst" foreign="numConst"/>
+    </foreign-key>
+    <foreign-key foreignTable="Source" phpName="Source" refPhpName="CompNutri">
+      <reference local="numSource" foreign="numSource"/>
+    </foreign-key>
+  </table>
+
+
+</database>
+
